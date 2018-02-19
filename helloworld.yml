@@ -1,0 +1,34 @@
+---
+- name: Hello World!
+  hosts: localhost
+
+  tasks:
+
+  - name: Hello World!
+    shell: cat /etc/hosts
+    register: result
+
+  - name: Print Output
+#    debug: msg="Server is {{ ec2_tag_Name }}"
+    debug: var=result
+
+#  - name: Check output
+#    local_action: shell echo "Condition met!!"
+#    when: (result.stdout.find('Hide') != -1 or result.stdout.find('Hello') != -1)
+
+  - local_action: mail
+                  subject="Ansible Report from Control machine"
+                  body="{{ result.stdout }} \n These results are from Control Machine"
+                  from="Ansible Control Machine <ansible@ctepl.com>"
+                  to="pdebnath@ctepl.com"
+                  host="smtp.office365.com"
+                  port=587
+                  username="ansible@ctepl.com"
+                  password="Su09876&"
+                  attach="/etc/hosts"
+#  - name: "Create download dir"
+#    file: path=~/downloads state=directory
+
+#  - name: "Get FTP Artifact"
+#    get_url: url="ftp://recall:Malbec1912@ftp.rsd.com/GLASS344/readme.txt" dest="~/downloads"
+    #get_url: url=https://github.com/ansible/ansible-examples/README.md dest=~/downloads force=no
